@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viero Stock - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h2>Viero <span>Stock</span></h2>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#">Dashboard (Soma Total)</a></li>
+            <li><a href="#">Estoque: Bar Grande</a></li>
+            <li><a href="#">Estoque: Bar Pequeno</a></li>
+            <li><a href="#">Fechamento de Turno</a></li>
+            <li><a href="#">Logs de Auditoria</a></li>
+        </ul>
+        <div class="user-info">
+            <span id="loggedUser">Admin</span>
+            <button id="logoutBtn" class="btn-secondary">Sair</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1>Visão Geral do Estoque</h1>
+            <button class="btn-warning">Alerta: 3 Itens Críticos</button>
+        </header>
+
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total de Garrafas (Geral)</h3>
+                <p class="big-number">1.204</p>
+            </div>
+            <div class="metric-card">
+                <h3>Top Seller da Noite</h3>
+                <p class="big-number">Gin Tanqueray</p>
+            </div>
+            <div class="metric-card">
+                <h3>Perdas Registradas</h3>
+                <p class="big-number error">4</p>
+            </div>
+        </section>
+
+        <section class="data-section">
+            <h2>Movimentação Recente</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Bar</th>
+                        <th>Produto</th>
+                        <th>Tipo</th>
+                        <th>Qtd</th>
+                        <th>Usuário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>02:30</td>
+                        <td>Bar Pequeno</td>
+                        <td>Whisky Red Label</td>
+                        <td><span class="badge out">Saída</span></td>
+                        <td>2</td>
+                        <td>Operador 2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
