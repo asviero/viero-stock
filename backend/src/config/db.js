@@ -1,6 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const fs = require('fs'); // Módulo nativo adicionado para manipulação de pastas
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -9,7 +9,7 @@ const dbPath = process.env.DB_PATH
     ? path.resolve(__dirname, '../../', process.env.DB_PATH)
     : path.resolve(__dirname, '../../../database/viero_stock.db');
 
-// DEFESA DE ARQUITETURA: Verifica se o diretório pai existe; se não, cria de forma recursiva
+// Verifica se o diretório pai existe; se não, cria de forma recursiva
 const dbDir = path.dirname(dbPath);
 if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
@@ -23,7 +23,6 @@ const db = new Database(dbPath, { verbose: console.log });
 db.pragma('foreign_keys = ON');
 
 function initDB() {
-    // 1. Criação das tabelas estruturais
     db.exec(`
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,7 +58,7 @@ function initDB() {
         );
     `);
 
-    // 2. Seed: Popula os Bares Operacionais se a tabela estiver vazia
+    // 2. Seed: Popula os bares
     const barCount = db.prepare('SELECT COUNT(*) as count FROM bars').get();
     if (barCount.count === 0) {
         const insertBar = db.prepare('INSERT INTO bars (name) VALUES (?)');
@@ -68,7 +67,7 @@ function initDB() {
         console.log('-> Seed: Bares operacionais inicializados com sucesso.');
     }
 
-    // 3. Seed: Cria o Administrador Padrão se não houver usuários
+    // 3. Seed: Cria o Administrador padrão
     const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
     if (userCount.count === 0) {
         const saltRounds = 10;
