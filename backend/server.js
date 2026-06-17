@@ -7,6 +7,7 @@ const { initDB } = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
 const productRoutes = require('./src/routes/productRoutes');
 const inventoryRoutes = require('./src/routes/inventoryRoutes');
+const dashboardRoutes = require('./src/routes/dashboardRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,7 @@ try {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Rota de Health Check
 app.get('/api/health', (req, res) => {
@@ -40,7 +42,7 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Inicialização do Servidor
+// Inicialização
 app.listen(PORT, () => {
     console.log(`🚀 Viero Stock API rodando em http://localhost:${PORT}`);
 });
