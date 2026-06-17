@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { initDB } = require('./src/config/db');
 
 const authRoutes = require('./src/routes/authRoutes');
@@ -13,6 +14,8 @@ const PORT = process.env.PORT || 3000;
 // Middlewares 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Inicialização BD
 try {
