@@ -25,25 +25,33 @@
 
     <main class="main-content">
         <header>
-            <h1 id="pageTitle">Selecione um Bar</h1>
+            <h1 id="pageTitle">Carregando...</h1>
         </header>
+
+        <section id="dashboardMetrics" class="metrics-grid" style="display: none;">
+            <div class="metric-card">
+                <h3>Soma Total (Garrafas/Itens)</h3>
+                <p class="big-number" id="metricTotalStock">-</p>
+            </div>
+            <div class="metric-card">
+                <h3>Top Seller</h3>
+                <p class="big-number" id="metricTopSeller">-</p>
+            </div>
+            <div class="metric-card">
+                <h3>Alertas (Abaixo do Mínimo)</h3>
+                <p class="big-number error" id="metricAlerts">-</p>
+            </div>
+        </section>
 
         <section class="data-section">
             <table class="data-table">
                 <thead>
-                    <tr>
-                        <th>Categoria</th>
-                        <th>Subcategoria</th>
-                        <th>Produto</th>
-                        <th>Qtd Atual</th>
-                        <th>Ação</th>
-                    </tr>
+                    <tr id="tableHeaderRow">
+                        </tr>
                 </thead>
                 <tbody id="inventoryTableBody">
                     <tr>
-                        <td colspan="5" style="text-align: center; color: var(--text-muted);">
-                            Selecione um bar no menu lateral para visualizar o estoque.
-                        </td>
+                        <td colspan="5" style="text-align: center;">Carregando sistema...</td>
                     </tr>
                 </tbody>
             </table>
