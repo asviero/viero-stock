@@ -284,3 +284,6 @@ header {
 
 .toast.success { background-color: var(--success); }
 .toast.error { background-color: var(--danger); }
+
+.badge.in { background-color: rgba(0, 179, 126, 0.1); color: var(--success); }
+.badge.loss { background-color: rgba(247, 90, 104, 0.2); color: var(--danger); border: 1px solid var(--danger); }

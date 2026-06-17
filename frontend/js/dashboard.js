@@ -127,6 +127,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- LOGS DE AUDITORIA ---
+    const loadAuditLogs = async () => {
+        currentActiveBarId = null;
+        pageTitle.textContent = 'Logs de Auditoria';
+        dashboardMetrics.style.display = 'none';
+        
+        tableHeaderRow.innerHTML = `<th>Data/Hora</th><th>Usuário</th><th>Bar</th><th>Ação</th><th>Produto</th><th>Qtd</th>`;
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Carregando histórico...</td></tr>';
+
+        try {
+            const response = await fetchWithAuth('/audit');
+            const data = await response.json();
+            
+            if (!response.ok) throw new Error(data.error || 'Erro ao carregar auditoria');
+
+            tableBody.innerHTML = '';
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma movimentação registrada.</td></tr>';
+                return;
+            }
+
+            data.forEach(log => {
+                const tr = document.createElement('tr');
+                
+                // Formata a data
+                const dateObj = new Date(log.timestamp.replace(' ', 'T'));
+                const formattedDate = dateObj.toLocaleString('pt-BR');
+
+                let badge = '';
+                if (log.type === 'IN') badge = '<span class="badge in">Entrada</span>';
+                else if (log.type === 'OUT') badge = '<span class="badge out">Saída</span>';
+                else if (log.type === 'LOSS') badge = '<span class="badge loss">Perda</span>';
+
+                tr.innerHTML = `
+                    <td style="color: var(--text-muted); font-size: 0.9rem;">${formattedDate}</td>
+                    <td><strong>${log.username}</strong></td>
+                    <td>${log.bar_name}</td>
+                    <td>${badge}</td>
+                    <td>${log.product_name}</td>
+                    <td><strong>${log.qty}</strong></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error(error);
+            showToast(error.message, 'error');
+        }
+    };
+
     // --- NAVEGAÇÃO ---
     document.getElementById('nav-dashboard').addEventListener('click', (e) => {
         e.preventDefault();
@@ -141,6 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nav-bar-2').addEventListener('click', (e) => {
         e.preventDefault();
         loadInventory(2, 'Bar Pequeno');
+    });
+
+    document.getElementById('nav-logs').addEventListener('click', (e) => {
+        e.preventDefault();
+        loadAuditLogs();
     });
 
     // --- LÓGICA DO MODAL ---
