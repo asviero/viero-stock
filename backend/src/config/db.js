@@ -4,22 +4,19 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-// Resolução de caminho absoluto subindo níveis: config -> src -> backend -> raiz do projeto
+
 const dbPath = process.env.DB_PATH 
     ? path.resolve(__dirname, '../../', process.env.DB_PATH)
     : path.resolve(__dirname, '../../../database/viero_stock.db');
 
-// Verifica se o diretório pai existe; se não, cria de forma recursiva
 const dbDir = path.dirname(dbPath);
 if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
     console.log(`-> Diretório criado automaticamente em: ${dbDir}`);
 }
 
-// Abre a conexão com o banco de dados (agora com a pasta garantida)
 const db = new Database(dbPath, { verbose: console.log });
 
-// Pragma obrigatório para impor restrições de integridade referencial (Foreign Keys)
 db.pragma('foreign_keys = ON');
 
 function initDB() {
@@ -42,6 +39,7 @@ function initDB() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             category TEXT NOT NULL,
+            subcategory TEXT,
             price REAL NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
@@ -58,7 +56,6 @@ function initDB() {
         );
     `);
 
-    // 2. Seed: Popula os bares
     const barCount = db.prepare('SELECT COUNT(*) as count FROM bars').get();
     if (barCount.count === 0) {
         const insertBar = db.prepare('INSERT INTO bars (name) VALUES (?)');
@@ -67,7 +64,6 @@ function initDB() {
         console.log('-> Seed: Bares operacionais inicializados com sucesso.');
     }
 
-    // 3. Seed: Cria o Administrador padrão
     const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
     if (userCount.count === 0) {
         const saltRounds = 10;
