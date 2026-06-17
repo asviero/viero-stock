@@ -198,6 +198,42 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAuditLogs();
     });
 
+    // -- FECHAMENTO TURNO --
+    document.getElementById('nav-shift').addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        // Confirmação de segurança
+        if(!confirm('Atenção: Deseja realmente encerrar o turno de hoje e gerar o relatório em PDF?')) return;
+
+        try {
+            showToast('Processando fechamento e gerando documento...', 'success');
+            
+            const response = await fetchWithAuth('/shift/close', { method: 'POST' });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erro ao gerar fechamento.');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Viero_Fechamento_${new Date().getTime()}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Limpeza da memória do navegador
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            showToast('Turno encerrado e PDF baixado com sucesso!');
+        } catch (error) {
+            console.error(error);
+            showToast(error.message, 'error');
+        }
+    });
+
     // --- LÓGICA DO MODAL ---
     window.openModal = (productId, productName) => {
         document.getElementById('modalProductId').value = productId;

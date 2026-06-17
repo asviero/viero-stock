@@ -67,6 +67,14 @@ function initDB() {
             FOREIGN KEY (product_id) REFERENCES products(id),
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
+
+        CREATE TABLE IF NOT EXISTS shift_closures (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            closed_by INTEGER NOT NULL,
+            closed_at DATETIME DEFAULT (datetime('now', 'localtime')),
+            snapshot_json TEXT NOT NULL,
+            FOREIGN KEY (closed_by) REFERENCES users(id)
+        );
     `);
 
     const barCount = db.prepare('SELECT COUNT(*) as count FROM bars').get();
