@@ -54,6 +54,19 @@ function initDB() {
             FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
             UNIQUE(bar_id, product_id)
         );
+
+        CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            bar_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            type TEXT CHECK(type IN ('IN', 'OUT', 'LOSS')) NOT NULL,
+            qty INTEGER NOT NULL,
+            timestamp DATETIME DEFAULT (datetime('now', 'localtime')),
+            FOREIGN KEY (bar_id) REFERENCES bars(id),
+            FOREIGN KEY (product_id) REFERENCES products(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
     `);
 
     const barCount = db.prepare('SELECT COUNT(*) as count FROM bars').get();

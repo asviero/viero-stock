@@ -4,6 +4,8 @@ const cors = require('cors');
 const { initDB } = require('./src/config/db');
 
 const authRoutes = require('./src/routes/authRoutes');
+const productRoutes = require('./src/routes/productRoutes');
+const inventoryRoutes = require('./src/routes/inventoryRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +25,8 @@ try {
 
 // Rotas API
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 // Rota de Health Check
 app.get('/api/health', (req, res) => {
