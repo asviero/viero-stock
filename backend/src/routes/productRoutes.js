@@ -3,11 +3,15 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 const { verifyToken, requireAdmin } = require('../middlewares/authMiddleware');
 
-// Rotas protegidas
-// GET /api/products
+// Rotas de leitura
 router.get('/', verifyToken, productController.getAllProducts);
 
-// GET /api/products/seed
+// Seed
 router.post('/seed', verifyToken, requireAdmin, productController.seedInitialProducts);
+
+// Rotas de Escrita
+router.post('/', verifyToken, requireAdmin, productController.createProduct);
+router.put('/:id', verifyToken, requireAdmin, productController.updateProduct);
+router.delete('/:id', verifyToken, requireAdmin, productController.deleteProduct);
 
 module.exports = router;

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viero Stock - Catálogo de Produtos</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h2>Viero <span>Stock</span></h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard (Soma Total)</a></li>
+            <li><a href="cmv.html">Relatório CMV</a></li>
+            <li><a href="catalog.html" class="active">Catálogo de Produtos</a></li>
+        </ul>
+        <div class="user-info">
+            <span id="loggedUser">Admin</span>
+            <button id="logoutBtn" class="btn-secondary">Sair</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1>Gestão do Catálogo</h1>
+            <button class="btn-primary" id="btnNewProduct" style="width: auto; padding: 0.8rem 1.5rem;">+ Novo Produto</button>
+        </header>
+
+        <section class="data-section">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Subcategoria</th>
+                        <th>Nome do Produto</th>
+                        <th>Custo</th>
+                        <th>Venda</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="catalogTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Carregando catálogo...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal de Formulário (Criar / Editar) -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Novo Produto</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                
+                <div class="input-group">
+                    <label for="prodName">Nome do Produto</label>
+                    <input type="text" id="prodName" required placeholder="Ex: Cerveja IPA">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="prodCategory">Categoria</label>
+                        <input type="text" id="prodCategory" required placeholder="Ex: Cervejas">
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="prodSubcategory">Subcategoria (Opcional)</label>
+                        <input type="text" id="prodSubcategory">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="prodCost">Preço de Custo (R$)</label>
+                        <input type="number" id="prodCost" step="0.01" min="0" required value="0">
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="prodPrice">Preço de Venda (R$)</label>
+                        <input type="number" id="prodPrice" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnSaveProduct">Salvar Produto</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback Visual -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/catalog.js"></script>
+</body>
+</html>
