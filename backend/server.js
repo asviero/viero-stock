@@ -10,11 +10,12 @@ const inventoryRoutes = require('./src/routes/inventoryRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const auditRoutes = require('./src/routes/auditRoutes');
 const shiftRoutes = require('./src/routes/shiftRoutes');
+const financialRoutes = require('./src/routes/financialRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
@@ -45,6 +46,9 @@ app.get('/api/health', (req, res) => {
         timestamp: new Date()
     });
 });
+
+// Rota de finanças
+app.use('/api/financial', financialRoutes);
 
 // Inicialização
 app.listen(PORT, () => {

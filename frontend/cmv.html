@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viero Stock - Relatório CMV</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h2>Viero <span>Stock</span></h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard (Soma Total)</a></li>
+            <li><a href="cmv.html" class="active">Relatório CMV</a></li>
+        </ul>
+        <div class="user-info">
+            <span id="loggedUser">Admin</span>
+            <button id="logoutBtn" class="btn-secondary">Sair</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1>Indicadores de CMV e Lucratividade</h1>
+        </header>
+
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <h3>Faturamento Bruto</h3>
+                <p class="big-number" id="finRevenue">R$ 0,00</p>
+            </div>
+            <div class="metric-card">
+                <h3>CMV Total (Custo)</h3>
+                <p class="big-number error" id="finCMV">R$ 0,00</p>
+            </div>
+            <div class="metric-card">
+                <h3>Lucro Bruto</h3>
+                <p class="big-number" id="finProfit" style="color: var(--success)">R$ 0,00</p>
+            </div>
+        </section>
+
+        <section class="data-section">
+            <h2>Performance Comercial por Item</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd Vendida</th>
+                        <th>Preço Custo</th>
+                        <th>Preço Venda</th>
+                        <th>Faturamento</th>
+                        <th>CMV Absoluto</th>
+                        <th>Margem Bruta</th>
+                    </tr>
+                </thead>
+                <tbody id="cmvTableBody">
+                    <tr>
+                        <td colspan="7" style="text-align: center;">Carregando dados financeiros...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/cmv.js"></script>
+</body>
+</html>

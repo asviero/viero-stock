@@ -41,6 +41,7 @@ function initDB() {
             category TEXT NOT NULL,
             subcategory TEXT,
             price REAL NOT NULL,
+            cost_price REAL NOT NULL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
