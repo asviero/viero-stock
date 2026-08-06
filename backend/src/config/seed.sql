@@ -49,7 +49,7 @@ INSERT INTO products (name, category, subcategory, price, cost_price) VALUES
 -- DRINKS --
 ('Aperol Spritz', 'Drinks', NULL, 32.00, 8.50),
 ('Blue Moon', 'Drinks', NULL, 28.00, 7.00),
-('Caipirinha de Limão', 'Drinks', NULL, 25.00),
+('Caipirinha de Limão', 'Drinks', NULL, 25.00, 5.00),
 ('Fernet com Coca', 'Drinks', NULL, 29.00, 9.00),
 ('Gin Tônica', 'Drinks', NULL, 30.00, 8.00),
 ('Melancita', 'Drinks', NULL, 32.00, 9.50),
