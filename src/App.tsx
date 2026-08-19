@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
-import Inventory from "./pages/Inventory"; // <-- Importamos a nova tela
+import Dashboard from "./pages/Dashboard";
+import Inventory from "./pages/Inventory";
 import Login from "./pages/Login";
 import Products from "./pages/Products";
+import Users from "./pages/Users";
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const token = localStorage.getItem("token");
@@ -16,11 +18,13 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
     <div className="min-h-screen bg-muted/20">
       <nav className="bg-white border-b px-8 py-4 flex gap-6 items-center shadow-sm">
         <span className="font-bold text-xl mr-4">Viero Stock</span>
+        <Link to="/dashboard" className="text-sm font-medium hover:text-primary">Dashboard</Link>
         <Link to="/produtos" className="text-sm font-medium hover:text-primary">Catálogo</Link>
         <Link to="/estoque" className="text-sm font-medium hover:text-primary">Estoque</Link>
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <Link to="/usuarios" className="text-sm font-medium hover:text-primary">Usuários</Link>
+        <Button
+          variant="ghost"
+          size="sm"
           className="ml-auto"
           onClick={() => {
             localStorage.clear();
@@ -48,6 +52,12 @@ export default function App() {
         
         {/* Nova Rota de Estoque */}
         <Route path="/estoque" element={<PrivateRoute><Inventory /></PrivateRoute>} />
+
+        <Route path="/usuarios" element={<PrivateRoute><Users /></PrivateRoute>} />
+
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
+        <Route path="/usuarios" element={<PrivateRoute><Users /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );
