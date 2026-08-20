@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 backend/.env
-database/viero.db
+database/viero_stock.db

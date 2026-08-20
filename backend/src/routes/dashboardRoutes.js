@@ -7,5 +7,7 @@ const { verifyToken, requireAdmin } = require('../middlewares/authMiddleware');
 router.get('/general-stock', verifyToken, requireAdmin, dashboardController.getGeneralStock);
 router.get('/critical', verifyToken, requireAdmin, dashboardController.getCriticalStock);
 router.get('/top-sellers', verifyToken, requireAdmin, dashboardController.getTopSellers);
+// Adicione esta linha junto com as outras rotas:
+router.get('/financials', verifyToken, requireAdmin, dashboardController.getFinancials);
 
 module.exports = router;

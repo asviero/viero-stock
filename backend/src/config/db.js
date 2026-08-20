@@ -50,7 +50,7 @@ function initDB() {
             bar_id INTEGER NOT NULL,
             product_id INTEGER NOT NULL,
             quantity INTEGER DEFAULT 0,
-            min_qty INTEGER DEFAULT 10,
+            min_qty INTEGER DEFAULT 3,
             FOREIGN KEY (bar_id) REFERENCES bars(id) ON DELETE CASCADE,
             FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
             UNIQUE(bar_id, product_id)

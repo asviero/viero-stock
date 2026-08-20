@@ -32,25 +32,34 @@ interface GeneralStock {
   total_quantity: number;
 }
 
+interface Financials {
+  revenue: number;
+  cost: number;
+  cmv: number;
+}
+
 export default function Dashboard() {
   const [topSellers, setTopSellers] = useState<TopSeller[]>([]);
   const [criticalStock, setCriticalStock] = useState<CriticalStock[]>([]);
   const [generalStock, setGeneralStock] = useState<GeneralStock[]>([]);
+  const [financials, setFinancials] = useState<Financials>({ revenue: 0, cost: 0, cmv: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Dispara as três requisições ao mesmo tempo para carregar a tela mais rápido
-        const [sellersRes, criticalRes, generalRes] = await Promise.all([
+        // Agora disparamos 4 requisições!
+        const [sellersRes, criticalRes, generalRes, financialsRes] = await Promise.all([
           api.get("/dashboard/top-sellers"),
           api.get("/dashboard/critical"),
-          api.get("/dashboard/general-stock")
+          api.get("/dashboard/general-stock"),
+          api.get("/dashboard/financials")
         ]);
 
         setTopSellers(sellersRes.data);
         setCriticalStock(criticalRes.data);
         setGeneralStock(generalRes.data);
+        setFinancials(financialsRes.data);
       } catch (error) {
         console.error("Erro ao carregar dados do dashboard:", error);
       } finally {
@@ -61,6 +70,11 @@ export default function Dashboard() {
     fetchDashboardData();
   }, []);
 
+  // Formatador de Moeda (BRL)
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  };
+
   if (loading) {
     return <div className="p-8 text-center text-muted-foreground">Carregando métricas...</div>;
   }
@@ -68,6 +82,36 @@ export default function Dashboard() {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <h1 className="text-3xl font-bold tracking-tight">Visão Geral</h1>
+
+      {/* CARDS FINANCEIROS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Faturamento (Bruto)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{formatCurrency(financials.revenue)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Custo das Vendas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-500">{formatCurrency(financials.cost)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">CMV Global (Ideal: 25% a 30%)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {financials.cmv}%
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Gráfico de Mais Vendidos */}
