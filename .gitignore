@@ -24,4 +24,10 @@ dist-ssr
 *.sw?
 
 backend/.env
+
+# Banco de Dados
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
 database/viero_stock.db
