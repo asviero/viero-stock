@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -9,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { api } from "@/services/api";
+import { Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -48,7 +50,6 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Agora disparamos 4 requisições!
         const [sellersRes, criticalRes, generalRes, financialsRes] = await Promise.all([
           api.get("/dashboard/top-sellers"),
           api.get("/dashboard/critical"),
@@ -70,9 +71,40 @@ export default function Dashboard() {
     fetchDashboardData();
   }, []);
 
-  // Formatador de Moeda (BRL)
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  };
+
+  // Função para exportar os dados para CSV (Abre no Excel)
+  const exportToCSV = (data: any[], filename: string) => {
+    if (!data || data.length === 0) {
+      alert("Não há dados para exportar.");
+      return;
+    }
+
+    // Pega as chaves (cabeçalhos) do primeiro objeto
+    const headers = Object.keys(data[0]);
+    
+    // Monta as linhas separadas por vírgula
+    const csvRows = data.map(row => {
+      return headers.map(fieldName => {
+        // Envolve o texto em aspas para evitar problemas com vírgulas internas
+        return `"${row[fieldName] ?? ''}"`;
+      }).join(',');
+    });
+
+    // Junta os cabeçalhos com as linhas
+    const csvContent = [headers.join(','), ...csvRows].join('\n');
+    
+    // Cria um arquivo temporário no navegador e força o download
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); // \uFEFF força o formato UTF-8 no Excel
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (loading) {
@@ -136,13 +168,20 @@ export default function Dashboard() {
         </Card>
 
         {/* Tabela de Alertas de Estoque Crítico */}
-        <Card className="col-span-1 border-destructive/50">
-          <CardHeader>
+        <Card className="col-span-1 border-destructive/50 flex flex-col">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-destructive flex items-center gap-2">
-              ⚠️ Alertas de Estoque Crítico
+              ⚠️ Alertas de Estoque
             </CardTitle>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => exportToCSV(criticalStock, "estoque_critico")}
+            >
+              <Download className="w-4 h-4 mr-2" /> Exportar
+            </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1">
             <div className="overflow-auto h-[250px]">
               <Table>
                 <TableHeader>
@@ -179,8 +218,15 @@ export default function Dashboard() {
 
       {/* Tabela de Estoque Geral Consolidado */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle>Estoque Geral (Consolidado)</CardTitle>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => exportToCSV(generalStock, "estoque_geral")}
+          >
+            <Download className="w-4 h-4 mr-2" /> Exportar Planilha Excel
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
@@ -188,7 +234,7 @@ export default function Dashboard() {
               <TableRow>
                 <TableHead>Produto</TableHead>
                 <TableHead>Categoria</TableHead>
-                <TableHead className="text-right">Quantidade Total (Todos os Bares)</TableHead>
+                <TableHead className="text-right">Quantidade Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
