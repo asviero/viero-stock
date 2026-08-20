@@ -36,7 +36,13 @@ interface InventoryItem {
 }
 
 export default function Inventory() {
-  const userRole = localStorage.getItem("role") || "ADMIN";
+  // Lê o localStorage e limpa aspas, espaços e falsos "undefined"
+  const rawRole = localStorage.getItem("role");
+  const userRole = (rawRole && rawRole !== "undefined" && rawRole !== "null" ? rawRole : "ADMIN")
+    .replace(/['"]+/g, "") // Remove aspas caso o login tenha salvo via JSON.stringify
+    .trim()
+    .toUpperCase();
+
   const initialBar = userRole === "BAR_PEQUENO" ? "2" : "1";
 
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
@@ -138,7 +144,11 @@ export default function Inventory() {
             disabled={userRole !== "ADMIN"}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o Bar" />
+              <SelectValue>
+                {selectedBar === "1" ? "Bar Grande" : 
+                 selectedBar === "2" ? "Bar Pequeno" : 
+                 "Selecione o Bar"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">Bar Grande</SelectItem>
