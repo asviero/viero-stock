@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 
-const dbPath = process.env.DB_PATH 
+const dbPath = process.env.DB_PATH
     ? path.resolve(__dirname, '../../', process.env.DB_PATH)
     : path.resolve(__dirname, '../../../database/viero_stock.db');
 
@@ -61,8 +61,9 @@ function initDB() {
             bar_id INTEGER NOT NULL,
             product_id INTEGER NOT NULL,
             user_id INTEGER NOT NULL,
-            type TEXT CHECK(type IN ('IN', 'OUT', 'LOSS')) NOT NULL,
+            type TEXT CHECK(type IN ('IN_INITIAL', 'IN_EXTRA_MAIN', 'IN_EXTRA_BAR', 'OUT', 'OUT_DRINKS', 'OUT_DOSES', 'OUT_VALES', 'LOSS')) NOT NULL,
             qty INTEGER NOT NULL,
+            observation TEXT,
             timestamp DATETIME DEFAULT (datetime('now', 'localtime')),
             FOREIGN KEY (bar_id) REFERENCES bars(id),
             FOREIGN KEY (product_id) REFERENCES products(id),

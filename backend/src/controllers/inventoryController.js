@@ -43,20 +43,23 @@ exports.getInventoryByBar = (req, res) => {
 exports.moveStock = (req, res) => {
     const barId = parseInt(req.params.barId);
     const userId = req.user.id;
-    const { productId, type, qty } = req.body;
+    
+    // Extraímos a 'observation' do req.body
+    const { productId, type, qty, observation } = req.body;
 
     if (!checkBarAccess(req.user.role, barId)) {
         return res.status(403).json({ error: 'Acesso negado para movimentar neste bar.' });
     }
 
-    if (!['IN', 'OUT', 'LOSS'].includes(type) || qty <= 0) {
+    if (!['IN_INITIAL', 'IN_EXTRA_MAIN', 'IN_EXTRA_BAR', 'OUT', 'OUT_DRINKS', 'OUT_DOSES', 'OUT_VALES', 'LOSS'].includes(type) || qty <= 0) {
         return res.status(400).json({ error: 'Tipo de movimentação inválida ou quantidade zero.' });
     }
 
     try {
         // Bloco de Transação ACID
         const processTransaction = db.transaction(() => {
-            const qtyChange = (type === 'IN') ? qty : -qty;
+            
+            const qtyChange = (type.startsWith('IN')) ? qty : -qty;
 
             const upsertStmt = db.prepare(`
                 INSERT INTO inventory (bar_id, product_id, quantity)
@@ -65,12 +68,13 @@ exports.moveStock = (req, res) => {
             `);
             upsertStmt.run(barId, productId, qtyChange, qtyChange);
 
-            // Grava na tabela de histórico de transações
+            // Grava na tabela de histórico de transações com a nova coluna observation
             const logStmt = db.prepare(`
-                INSERT INTO transactions (bar_id, product_id, user_id, type, qty)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO transactions (bar_id, product_id, user_id, type, qty, observation)
+                VALUES (?, ?, ?, ?, ?, ?)
             `);
-            logStmt.run(barId, productId, userId, type, qty);
+            // Passa a observação, salvando null caso não tenha sido preenchida
+            logStmt.run(barId, productId, userId, type, qty, observation || null);
         });
 
         // Executa a transação
